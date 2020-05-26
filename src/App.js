@@ -27,11 +27,13 @@ class App extends React.Component {
   }
 
   render() {
+    const { count } = this.counter;
+
     return (
       <div>
         <h1>Tonebase Counter App</h1>
 
-        <Count count={this.counter.count} />
+        <Count count={count} />
 
         <button 
           type="button" 
