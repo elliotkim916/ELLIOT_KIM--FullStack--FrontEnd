@@ -1,26 +1,53 @@
 import React from 'react';
-import logo from './logo.svg';
+import { store, view } from '@risingstack/react-easy-state';
+import Count from './Count';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+class App extends React.Component {
+  counter = store({ count: 0 });
+  incrementUp = () => this.counter.count++;
+  incrementDown = () => this.counter.count--;
+
+  componentDidMount() {
+    this.interval = setInterval(() => {
+      const currentTime = new Date().getHours();
+      
+      if (currentTime >= 9 && currentTime < 17) {
+        this.incrementUp();
+      }
+   
+      if (currentTime >= 18 || currentTime < 8) {
+        this.incrementDown();
+      }
+    }, 60 * 60 * 1000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
+  }
+
+  render() {
+    return (
+      <div>
+        <h1>Tonebase Counter App</h1>
+
+        <Count count={this.counter.count} />
+
+        <button 
+          type="button" 
+          onClick={this.incrementUp}
         >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+          Increment UP
+        </button>
+        <button 
+          type="button"
+          onClick={this.incrementDown}
+        >
+          Increment DOWN
+        </button>
+      </div>
+    );
+  }
 }
 
-export default App;
+export default view(App);
